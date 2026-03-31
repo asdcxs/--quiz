@@ -10,6 +10,44 @@ let score = 0;
 let wrongList = [];
 let stats = { solved: 0, correct: 0 };
 
+// ── 오답노트 ──
+function wrongKey(q) {
+  return (q.question || '').slice(0, 80);
+}
+function loadWrongStats() {
+  return JSON.parse(localStorage.getItem('wrong_stats') || '{}');
+}
+function saveWrongStat(q) {
+  const stats = loadWrongStats();
+  const key = wrongKey(q);
+  if (!stats[key]) stats[key] = { count: 0, q: {} };
+  stats[key].count++;
+  // 문제 전체 저장 (code, options 포함)
+  stats[key].q = {
+    subject: q.subject, question: q.question, answer: q.answer,
+    explanation: q.explanation, options: q.options,
+    code: q.code, lang: q.lang
+  };
+  localStorage.setItem('wrong_stats', JSON.stringify(stats));
+  updateWrongBadge();
+}
+function removeWrongStat(q) {
+  const stats = loadWrongStats();
+  delete stats[wrongKey(q)];
+  localStorage.setItem('wrong_stats', JSON.stringify(stats));
+  updateWrongBadge();
+}
+function loadWrongPool() {
+  return Object.values(loadWrongStats())
+    .sort((a, b) => b.count - a.count)
+    .map(s => ({ ...s.q, wrongCount: s.count }));
+}
+function updateWrongBadge() {
+  const cnt = Object.keys(loadWrongStats()).length;
+  const el = document.getElementById('wrong-badge');
+  if (el) { el.textContent = cnt > 0 ? cnt : ''; el.style.display = cnt > 0 ? 'inline-block' : 'none'; }
+}
+
 // ── D-Day 계산 ──
 const DEFAULT_EXAM_DATE = '2026-04-18';
 
@@ -75,6 +113,7 @@ function showScreen(id) {
 function goHome() {
   showScreen('screen-home');
   loadStats();
+  updateWrongBadge();
 }
 
 // ── 모드 선택 ──
@@ -90,6 +129,8 @@ function startMode(mode) {
     showScreen('screen-gichu');
   } else if (mode === '예상문제') {
     startQuiz('예상문제', '전체');
+  } else if (mode === '오답노트') {
+    startQuiz('오답노트', '전체');
   }
 }
 
@@ -104,22 +145,34 @@ function startQuiz(mode, subject) {
   currentSubject = subject;
 
   // 문제 필터링
-  let pool = QUESTIONS[mode] || [];
-  // 실기 추가 문제 합산
-  if (mode === '실기' && QUESTIONS.실기_추가) {
-    pool = pool.concat(QUESTIONS.실기_추가);
-  }
-  if (subject !== '전체' && subject !== '전체언어') {
-    if (mode === '기출문제') {
-      // 기출문제는 year 필드로 필터링
-      pool = pool.filter(q => q.year === subject);
-    } else {
-      pool = pool.filter(q => q.subject === subject);
+  let pool;
+  if (mode === '오답노트') {
+    pool = loadWrongPool();
+    if (pool.length === 0) {
+      alert('아직 틀린 문제가 없습니다! 문제를 풀고 오세요 😊');
+      goHome();
+      return;
+    }
+  } else {
+    pool = QUESTIONS[mode] || [];
+    if (mode === '실기' && QUESTIONS.실기_추가) {
+      pool = pool.concat(QUESTIONS.실기_추가);
+    }
+    if (subject !== '전체' && subject !== '전체언어') {
+      if (mode === '기출문제') {
+        pool = pool.filter(q => q.year === subject);
+      } else {
+        pool = pool.filter(q => q.subject === subject);
+      }
     }
   }
 
-  // 셔플 후 최대 20문제
-  questions = shuffle([...pool]).slice(0, 20);
+  // 오답노트: 틀린 횟수 순 정렬, 최대 20개 / 나머지: 셔플 후 20개
+  if (mode === '오답노트') {
+    questions = pool.slice(0, 20);
+  } else {
+    questions = shuffle([...pool]).slice(0, 20);
+  }
   currentIndex = 0;
   score = 0;
   wrongList = [];
@@ -144,9 +197,6 @@ function showQuestion(idx) {
   const pct = ((idx) / questions.length) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
 
-  // 주제 태그
-  document.getElementById('question-subject-tag').textContent = q.subject;
-
   // 문제 텍스트
   document.getElementById('question-text').textContent = q.question;
 
@@ -163,7 +213,19 @@ function showQuestion(idx) {
   // 결과 숨김
   document.getElementById('result-container').style.display = 'none';
 
-  if (currentMode === '필기') {
+  // 오답노트에서 원래 문제 타입 유지 (options 있으면 객관식)
+  const isMultiChoice = currentMode === '필기' ||
+    (currentMode === '오답노트' && Array.isArray(q.options) && q.options.length > 0);
+
+  // 틀린 횟수 배지 표시
+  const wrongTag = document.getElementById('question-subject-tag');
+  if (q.wrongCount) {
+    wrongTag.innerHTML = `${q.subject} &nbsp;<span style="color:#ef4444;font-weight:700">⚠️ ${q.wrongCount}번 틀림</span>`;
+  } else {
+    wrongTag.textContent = q.subject;
+  }
+
+  if (isMultiChoice) {
     document.getElementById('input-container').style.display = 'none';
     document.getElementById('options-container').style.display = 'flex';
     renderOptions(q);
@@ -208,8 +270,10 @@ function selectOption(selected) {
   if (!isCorrect) {
     buttons[q.answer].classList.add('correct');
     wrongList.push({ q, userAnswer: q.options[selected] });
+    saveWrongStat(q);
   } else {
     score++;
+    if (currentMode !== '오답노트') removeWrongStat(q); // 맞추면 오답노트에서 제거
   }
   stats.solved++;
   if (isCorrect) stats.correct++;
@@ -232,8 +296,10 @@ function submitTextAnswer() {
   if (correct) {
     score++;
     stats.correct++;
+    if (currentMode !== '오답노트') removeWrongStat(q);
   } else {
     wrongList.push({ q, userAnswer: userAns });
+    saveWrongStat(q);
   }
 
   document.getElementById('input-container').style.display = 'none';
@@ -413,3 +479,4 @@ function escapeHtml(text) {
 // ── 초기화 ──
 calcDday();
 loadStats();
+updateWrongBadge();
