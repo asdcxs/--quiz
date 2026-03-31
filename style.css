@@ -30,7 +30,38 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
   padding: 8px 20px;
   font-size: 14px;
   color: #a78bfa;
+  cursor: pointer;
+  transition: border-color .2s;
 }
+.exam-date-badge:hover { border-color: #a78bfa; }
+
+/* 날짜 팝업 */
+.date-popup-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.date-popup {
+  background: #1a1a2e; border: 1px solid #3a3a5c;
+  border-radius: 16px; padding: 24px; width: 280px; text-align: center;
+}
+.date-popup-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.date-input {
+  width: 100%; background: #0f0f13; border: 1px solid #3a3a5c;
+  border-radius: 8px; padding: 10px 12px; color: #e8e8f0; font-size: 15px;
+  margin-bottom: 16px; text-align: center;
+}
+.date-input:focus { outline: none; border-color: #6366f1; }
+.date-popup-btns { display: flex; gap: 10px; }
+.date-btn-save {
+  flex: 1; background: #6366f1; border: none; color: #fff;
+  border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.date-btn-save:hover { background: #4f51d1; }
+.date-btn-cancel {
+  flex: 1; background: #2a2a42; border: none; color: #aaa;
+  border-radius: 8px; padding: 10px; font-size: 14px; cursor: pointer;
+}
+.date-btn-cancel:hover { background: #3a3a5c; }
 
 .mode-cards {
   display: grid; grid-template-columns: 1fr 1fr;

@@ -15,7 +15,21 @@
       <div class="logo">📋</div>
       <h1>정보처리기사</h1>
       <p class="subtitle">문제풀이 연습</p>
-      <div class="exam-date-badge">⏰ D-<span id="dday"></span> · 2026년 4월 18일 시험</div>
+      <div class="exam-date-badge" onclick="openDatePicker()" title="클릭하여 날짜 변경">
+        ⏰ D-<span id="dday"></span> · <span id="exam-date-text">2026년 4월 18일 시험</span> ✏️
+      </div>
+
+      <!-- 날짜 변경 팝업 -->
+      <div id="date-picker-popup" style="display:none" class="date-popup-overlay" onclick="closeDatePicker()">
+        <div class="date-popup" onclick="event.stopPropagation()">
+          <div class="date-popup-title">📅 시험 날짜 변경</div>
+          <input type="date" id="exam-date-input" class="date-input">
+          <div class="date-popup-btns">
+            <button class="date-btn-save" onclick="saveExamDate()">저장</button>
+            <button class="date-btn-cancel" onclick="closeDatePicker()">취소</button>
+          </div>
+        </div>
+      </div>
 
       <div class="mode-cards">
         <div class="mode-card" onclick="startMode('필기')">

@@ -11,12 +11,42 @@ let wrongList = [];
 let stats = { solved: 0, correct: 0 };
 
 // ── D-Day 계산 ──
+const DEFAULT_EXAM_DATE = '2026-04-18';
+
+function getExamDate() {
+  return localStorage.getItem('exam_date') || DEFAULT_EXAM_DATE;
+}
+
 function calcDday() {
-  const exam = new Date('2026-04-18');
+  const dateStr = getExamDate();
+  const exam = new Date(dateStr);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const diff = Math.ceil((exam - today) / (1000 * 60 * 60 * 24));
-  document.getElementById('dday').textContent = diff > 0 ? diff : '당일!';
+  document.getElementById('dday').textContent = diff > 0 ? diff : (diff === 0 ? '당일!' : '종료');
+
+  // 날짜 표시 업데이트
+  const [y, m, d] = dateStr.split('-');
+  document.getElementById('exam-date-text').textContent = `${y}년 ${parseInt(m)}월 ${parseInt(d)}일 시험`;
+}
+
+function openDatePicker() {
+  const current = getExamDate();
+  const input = document.getElementById('exam-date-input');
+  input.value = current;
+  document.getElementById('date-picker-popup').style.display = 'flex';
+}
+
+function closeDatePicker() {
+  document.getElementById('date-picker-popup').style.display = 'none';
+}
+
+function saveExamDate() {
+  const val = document.getElementById('exam-date-input').value;
+  if (!val) return;
+  localStorage.setItem('exam_date', val);
+  closeDatePicker();
+  calcDday();
 }
 
 // ── 통계 로드/저장 ──
