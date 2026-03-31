@@ -802,6 +802,116 @@ const QUESTIONS = {
       question: "애자일 방법론 중 켄트 벡이 창시한, 짧은 반복 주기와 지속적인 테스트를 강조하는 방법론은?",
       answer: ["XP", "익스트림 프로그래밍", "Extreme Programming"],
       explanation: "XP (Extreme Programming):\n- 켄트 벡(Kent Beck) 창시\n- 핵심 실천 방법: TDD, 페어 프로그래밍, 리팩토링, CI\n- 짧은 릴리즈 주기\n스크럼: 켄 슈와버, 제프 서덜랜드"
+    },
+
+    // ─── 디자인패턴 (출현율 58%) ───
+    {
+      subject: "디자인패턴",
+      question: "GoF 디자인 패턴의 3가지 분류를 쓰시오.",
+      answer: ["생성, 구조, 행위", "생성패턴, 구조패턴, 행위패턴"],
+      explanation: "GoF(Gang of Four) 디자인 패턴 3분류:\n생성(Creational): 객체 생성 → 싱글턴, 팩토리메서드, 추상팩토리, 빌더, 프로토타입\n구조(Structural): 구조 구성 → 어댑터, 브릿지, 컴포지트, 데코레이터, 퍼사드, 플라이웨이트, 프록시\n행위(Behavioral): 책임 분배 → 옵저버, 스트래티지, 커맨드, 반복자, 상태, 템플릿메서드 등"
+    },
+    {
+      subject: "디자인패턴",
+      question: "하나의 클래스 인스턴스만 존재하도록 보장하고 전역 접근점을 제공하는 디자인 패턴은?",
+      answer: ["싱글턴", "Singleton", "싱글톤"],
+      explanation: "Singleton 패턴:\n- 인스턴스를 오직 1개만 생성\n- private 생성자 + static getInstance()\n- 생성 패턴\n자주 출제: 코딩에서 getInstance() 호출 시 같은 객체임을 확인하는 문제 등장"
+    },
+    {
+      subject: "디자인패턴",
+      question: "기존 코드를 수정하지 않고 새로운 기능을 객체에 동적으로 추가하는 디자인 패턴은?",
+      answer: ["데코레이터", "Decorator"],
+      explanation: "Decorator 패턴 (구조 패턴):\n- 객체를 래퍼(Wrapper)로 감싸 기능 확장\n- 상속 대신 합성(Composition) 사용\n- 런타임에 기능 추가 가능\n유사: 프록시(대리), 어댑터(변환), 퍼사드(단순화)"
+    },
+    {
+      subject: "디자인패턴",
+      question: "옵저버(Observer) 패턴을 설명하시오.",
+      answer: ["객체 상태 변화 시 의존 객체들에게 자동 통보하는 패턴", "일대다 의존관계 패턴"],
+      explanation: "Observer 패턴 (행위 패턴):\n- 주체(Subject)의 상태 변화 → 모든 Observer에게 자동 알림\n- 일대다(1:N) 의존 관계\n- 이벤트 시스템, MVC의 View 갱신에 활용\n예: 유튜브 구독자 알림, 주식 시세 알림"
+    },
+    {
+      subject: "디자인패턴",
+      question: "팩토리 메서드(Factory Method) 패턴과 추상 팩토리(Abstract Factory) 패턴의 차이를 설명하시오.",
+      answer: ["팩토리메서드: 단일 제품 객체 생성을 서브클래스에 위임, 추상팩토리: 연관된 객체 군(패밀리) 생성", "팩토리메서드 단일, 추상팩토리 군"],
+      explanation: "Factory Method: 하나의 제품 생성 메서드를 서브클래스가 결정\nAbstract Factory: 관련 제품 군 전체를 함께 생성하는 인터페이스 제공\n예) Abstract Factory: UI테마(버튼+체크박스+텍스트박스)를 Windows/Mac 버전으로 한꺼번에 교체"
+    },
+
+    // ─── 암호화 (출현율 47%) ───
+    {
+      subject: "보안",
+      question: "대칭키 암호화 알고리즘과 비대칭키 암호화 알고리즘의 대표 예를 각각 2가지씩 쓰시오.",
+      answer: ["대칭키: AES, DES / 비대칭키: RSA, ECC", "대칭:AES/DES/SEED/ARIA, 비대칭:RSA/ECC/DSA"],
+      explanation: "대칭키(비밀키) 암호화:\n- 암·복호화에 동일한 키 사용\n- 빠름, 키 배포 어려움\n- AES(현재 표준), DES(구식), 3DES, SEED(국내), ARIA(국내)\n\n비대칭키(공개키) 암호화:\n- 공개키로 암호화, 개인키로 복호화\n- 느림, 키 배포 용이\n- RSA(가장 많이 사용), ECC, DSA"
+    },
+    {
+      subject: "보안",
+      question: "해시(Hash) 함수의 특징과 대표 알고리즘 2가지를 쓰시오.",
+      answer: ["단방향 암호화, SHA-256/MD5", "일방향 함수, SHA시리즈, MD5"],
+      explanation: "해시 함수 특징:\n- 단방향(One-way): 복호화 불가\n- 동일 입력 → 항상 동일 출력\n- 눈사태 효과: 입력 1비트 변경 → 출력 완전히 달라짐\n- 충돌 저항성\n\n알고리즘:\n- SHA 시리즈: SHA-1(160bit), SHA-256, SHA-512\n- MD5(128bit): 취약점 발견되어 보안용 비권장\n용도: 패스워드 저장, 무결성 검증"
+    },
+    {
+      subject: "보안",
+      question: "접근통제 정책 3가지(DAC, MAC, RBAC)를 설명하시오.",
+      answer: ["DAC: 소유자가 접근권한 설정, MAC: 보안등급 기반 강제 통제, RBAC: 역할 기반 접근통제", "임의/강제/역할기반"],
+      explanation: "DAC (Discretionary Access Control, 임의 접근통제):\n- 자원 소유자가 접근 권한 직접 설정\n- 유연하지만 관리 어려움\n\nMAC (Mandatory Access Control, 강제 접근통제):\n- 보안 등급과 규칙에 따라 시스템이 강제 통제\n- 군사·정부 기관에 사용\n\nRBAC (Role-Based Access Control, 역할 기반 접근통제):\n- 사용자의 역할(Role)에 따라 권한 부여\n- 기업 환경에서 가장 많이 사용"
+    },
+    {
+      subject: "보안",
+      question: "주요 사이버 공격 기법 중 '스니핑', '스푸핑', 'XSS'를 각각 간략히 설명하시오.",
+      answer: ["스니핑: 패킷 도청, 스푸핑: 위장/신분위조, XSS: 악성 스크립트 삽입", "도청/위조/스크립트삽입"],
+      explanation: "스니핑(Sniffing): 네트워크 패킷을 몰래 가로채 도청\n스푸핑(Spoofing): IP·MAC 등을 위조하여 다른 사람인 척 속임\nXSS(Cross-Site Scripting): 웹페이지에 악성 스크립트 삽입 → 사용자 쿠키/세션 탈취\nCSRF: 로그인된 사용자가 의도치 않은 요청을 보내도록 유도"
+    },
+
+    // ─── 응집도/결합도 (출현율 42%) ───
+    {
+      subject: "소프트웨어공학",
+      question: "응집도(Cohesion)가 높은 순서대로 7가지를 나열하시오.",
+      answer: ["기능적, 순차적, 교환적, 절차적, 시간적, 논리적, 우연적", "기순교절시논우"],
+      explanation: "응집도 높은 순 (좋음 → 나쁨):\n기능적(Functional) > 순차적(Sequential) > 교환적(Communicational) > 절차적(Procedural) > 시간적(Temporal) > 논리적(Logical) > 우연적(Coincidental)\n\n암기법: 기순교절시논우\n응집도 높을수록 모듈 재사용성·유지보수성 향상"
+    },
+    {
+      subject: "소프트웨어공학",
+      question: "결합도(Coupling)가 낮은 순서대로 6가지를 나열하시오.",
+      answer: ["자료, 스탬프, 제어, 외부, 공통, 내용", "자스제외공내"],
+      explanation: "결합도 낮은 순 (좋음 → 나쁨):\n자료(Data) > 스탬프(Stamp) > 제어(Control) > 외부(External) > 공통(Common) > 내용(Content)\n\n암기법: 자스제외공내\n결합도 낮을수록 독립적이고 수정 영향 최소화"
+    },
+    {
+      subject: "소프트웨어공학",
+      question: "Fan-in과 Fan-out이 무엇인지 설명하고, 좋은 설계 방향을 쓰시오.",
+      answer: ["Fan-in: 해당 모듈을 호출하는 수(높을수록 좋음), Fan-out: 해당 모듈이 호출하는 수(낮을수록 좋음)", "Fan-in 높게 Fan-out 낮게"],
+      explanation: "Fan-in: 해당 모듈을 호출하는 상위 모듈의 수\n→ 높을수록 재사용성 높음 (좋음)\n\nFan-out: 해당 모듈이 호출하는 하위 모듈의 수\n→ 낮을수록 복잡도 낮음 (좋음)\n\n좋은 설계: Fan-in ↑, Fan-out ↓"
+    },
+    {
+      subject: "소프트웨어공학",
+      question: "소프트웨어 아키텍처 패턴 중 '파이프-필터(Pipe-Filter)' 패턴을 설명하시오.",
+      answer: ["데이터를 파이프로 연결된 필터를 통해 순차 처리하는 패턴", "데이터 스트림을 필터로 변환"],
+      explanation: "파이프-필터(Pipe-Filter) 패턴:\n- 데이터 스트림을 각 단계(필터)가 변환\n- 필터들은 파이프로 연결\n- 각 필터는 독립적으로 동작\n예: Unix 명령어 파이프(ls | grep | sort)\n예: 컴파일러(어휘분석→구문분석→의미분석→코드생성)"
+    },
+
+    // ─── 트랜잭션/ACID (출현율 32%) ───
+    {
+      subject: "데이터베이스",
+      question: "트랜잭션의 ACID 특성 4가지를 쓰시오.",
+      answer: ["원자성, 일관성, 격리성, 지속성", "Atomicity, Consistency, Isolation, Durability"],
+      explanation: "트랜잭션 ACID:\nA - 원자성(Atomicity): 전부 실행 또는 전부 취소 (Commit/Rollback)\nC - 일관성(Consistency): 실행 전후 DB 일관성 유지\nI - 격리성(Isolation): 동시 실행 트랜잭션 간 서로 영향 없음\nD - 지속성(Durability): 성공 완료 시 결과 영구 반영"
+    },
+    {
+      subject: "데이터베이스",
+      question: "데이터베이스 회복 기법 중 REDO와 UNDO를 설명하시오.",
+      answer: ["REDO: 완료된 트랜잭션 재실행, UNDO: 미완료 트랜잭션 취소", "재수행/취소"],
+      explanation: "REDO (재수행):\n- 완료(Commit)된 트랜잭션을 재실행\n- 장애 발생 시 이미 커밋된 변경사항 복원\n- 포워드 회복\n\nUNDO (취소):\n- 미완료(Rollback) 트랜잭션을 취소\n- 장애 발생 시 커밋 안 된 변경사항 원상복구\n- 백워드 회복"
+    },
+    {
+      subject: "데이터베이스",
+      question: "병행 제어(Concurrency Control)의 목적과 대표적인 기법 2가지를 쓰시오.",
+      answer: ["다중 트랜잭션 동시 실행 시 일관성 유지, 로킹/타임스탬프", "직렬화 보장, 로킹/낙관적 병행제어"],
+      explanation: "병행 제어 목적: 여러 트랜잭션을 동시 실행해도 직렬 실행과 동일한 결과 보장\n\n기법:\n로킹(Locking): 자원에 잠금을 걸어 독점 사용\n- 공유 락(S-Lock): 읽기 허용\n- 배타 락(X-Lock): 읽기·쓰기 모두 독점\n\n타임스탬프(Timestamp): 트랜잭션 시작 순서대로 우선순위 부여\n\n낙관적 병행제어: 충돌 거의 없다고 가정, 검증 단계에서만 처리"
+    },
+    {
+      subject: "데이터베이스",
+      question: "데이터베이스 이상현상(Anomaly) 3가지를 쓰시오.",
+      answer: ["삽입 이상, 삭제 이상, 갱신 이상", "삽입/삭제/수정 이상"],
+      explanation: "DB 이상현상 (데이터 중복으로 발생):\n\n삽입 이상(Insertion Anomaly):\n필요 없는 데이터를 함께 삽입해야 하는 경우\n\n삭제 이상(Deletion Anomaly):\n한 데이터 삭제 시 연관된 필요한 데이터까지 삭제\n\n갱신 이상(Update Anomaly):\n중복 데이터 일부만 수정되어 불일치 발생\n\n해결: 정규화를 통해 이상현상 제거"
     }
   ],
 

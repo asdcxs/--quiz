@@ -200,8 +200,20 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
 .result-explanation {
   background: #1a1a2e; border: 1px solid #2a2a42;
   border-radius: 12px; padding: 16px 18px; font-size: 14px; line-height: 1.8;
-  color: #c8c8e0; margin-bottom: 20px; white-space: pre-wrap;
+  color: #c8c8e0; margin-bottom: 20px;
 }
+/* 정답/오답 비교 */
+.ans-compare { margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
+.ans-row { display: flex; align-items: baseline; gap: 10px; }
+.ans-label { font-size: 11px; color: #888; font-weight: 600; min-width: 36px; }
+.ans-val { font-size: 15px; font-weight: 700; white-space: pre-wrap; }
+.wrong-val { color: #ef4444; }
+.correct-val { color: #22c55e; }
+/* 해설 */
+.exp-section { border-top: 1px solid #2a2a42; padding-top: 12px; }
+.exp-label { font-size: 11px; font-weight: 700; color: #a78bfa; margin-bottom: 6px; }
+.exp-first { font-size: 14px; color: #e8e8f0; font-weight: 500; margin-bottom: 4px; white-space: pre-wrap; }
+.exp-rest { font-size: 13px; color: #9898b0; white-space: pre-wrap; margin-top: 4px; }
 .next-btn {
   width: 100%; background: #6366f1; border: none; color: #fff;
   border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer;

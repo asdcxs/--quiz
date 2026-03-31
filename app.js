@@ -234,14 +234,29 @@ function showResult(isCorrect, q, userAnswer) {
   badge.className = 'result-badge ' + (isCorrect ? 'ok' : 'ng');
   badge.textContent = isCorrect ? '✓ 정답!' : '✗ 오답';
 
-  let expText = '';
-  if (!isCorrect) {
-    const correctAns = Array.isArray(q.answer) ? q.answer[0] : q.answer;
-    expText += `정답: ${correctAns}\n내 답: ${userAnswer}\n\n`;
-  }
-  expText += q.explanation || '';
-  explanation.textContent = expText;
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+  const correctAns = Array.isArray(q.answer) ? q.answer[0] : q.answer;
+  let html = `<div class="ans-compare">`;
+  if (!isCorrect) {
+    html += `<div class="ans-row wrong-row"><span class="ans-label">내 답</span><span class="ans-val wrong-val">${esc(userAnswer)}</span></div>`;
+  }
+  html += `<div class="ans-row correct-row"><span class="ans-label">정답</span><span class="ans-val correct-val">${esc(correctAns)}</span></div>`;
+  html += `</div>`;
+
+  if (q.explanation) {
+    // 왜 틀렸는지 첫 줄 강조 + 나머지 해설
+    const lines = q.explanation.split('\n');
+    const firstLine = lines[0];
+    const rest = lines.slice(1).join('\n');
+    html += `<div class="exp-section">`;
+    html += `<div class="exp-label">💡 해설</div>`;
+    html += `<div class="exp-first">${esc(firstLine)}</div>`;
+    if (rest.trim()) html += `<div class="exp-rest">${esc(rest)}</div>`;
+    html += `</div>`;
+  }
+
+  explanation.innerHTML = html;
   container.style.display = 'block';
   saveStats();
 }
