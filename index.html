@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정보처리기사 문제풀이</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+  <!-- 홈 화면 -->
+  <div id="screen-home" class="screen active">
+    <div class="home-container">
+      <div class="logo">📋</div>
+      <h1>정보처리기사</h1>
+      <p class="subtitle">문제풀이 연습</p>
+      <div class="exam-date-badge">⏰ D-<span id="dday"></span> · 2026년 4월 18일 시험</div>
+
+      <div class="mode-cards">
+        <div class="mode-card" onclick="startMode('필기')">
+          <div class="mode-icon">📝</div>
+          <div class="mode-title">필기</div>
+          <div class="mode-desc">객관식 5지선다 · 5과목</div>
+        </div>
+        <div class="mode-card" onclick="startMode('실기')">
+          <div class="mode-icon">✍️</div>
+          <div class="mode-title">실기</div>
+          <div class="mode-desc">단답형 주관식 · 이론</div>
+        </div>
+        <div class="mode-card coding" onclick="startMode('코딩')">
+          <div class="mode-icon">💻</div>
+          <div class="mode-title">코딩</div>
+          <div class="mode-desc">출력 결과 맞추기 · C/Python/Java</div>
+        </div>
+        <div class="mode-card gichu" onclick="startMode('기출문제')">
+          <div class="mode-icon">📅</div>
+          <div class="mode-title">기출문제</div>
+          <div class="mode-desc">연도별 실제 기출 · 2022~2025</div>
+        </div>
+        <div class="mode-card yesang" onclick="startMode('예상문제')">
+          <div class="mode-icon">🎯</div>
+          <div class="mode-title">예상문제</div>
+          <div class="mode-desc">기출 변형 예상문제 · 실전 대비</div>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span id="total-solved">0</span>
+          <label>풀이 수</label>
+        </div>
+        <div class="stat-item">
+          <span id="total-correct">0</span>
+          <label>정답 수</label>
+        </div>
+        <div class="stat-item">
+          <span id="total-rate">0%</span>
+          <label>정답률</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 코딩 언어 선택 화면 -->
+  <div id="screen-coding" class="screen">
+    <div class="header">
+      <button class="back-btn" onclick="goHome()">← 홈</button>
+      <h2>언어 선택</h2>
+    </div>
+    <div class="subject-list">
+      <div class="subject-card all" onclick="startCoding('전체언어')">
+        <span class="subject-num">ALL</span>
+        <span class="subject-name">전체 언어 랜덤</span>
+      </div>
+      <div class="subject-card" onclick="startCoding('C언어')">
+        <span class="subject-num lang-c">C</span>
+        <span class="subject-name">C언어</span>
+      </div>
+      <div class="subject-card" onclick="startCoding('Python')">
+        <span class="subject-num lang-py">PY</span>
+        <span class="subject-name">Python</span>
+      </div>
+      <div class="subject-card" onclick="startCoding('Java')">
+        <span class="subject-num lang-java">JAVA</span>
+        <span class="subject-name">Java</span>
+      </div>
+      <div class="subject-card" onclick="startCoding('SQL')">
+        <span class="subject-num lang-sql">SQL</span>
+        <span class="subject-name">SQL</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기출문제 연도 선택 화면 -->
+  <div id="screen-gichu" class="screen">
+    <div class="header">
+      <button class="back-btn" onclick="goHome()">← 홈</button>
+      <h2>기출문제 연도 선택</h2>
+    </div>
+    <div class="subject-list">
+      <div class="subject-card all" onclick="startQuiz('기출문제', '전체')">
+        <span class="subject-num">ALL</span>
+        <span class="subject-name">전체 연도 랜덤</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('기출문제', '2025년')">
+        <span class="subject-num year-badge">2025</span>
+        <span class="subject-name">2025년 기출</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('기출문제', '2024년')">
+        <span class="subject-num year-badge">2024</span>
+        <span class="subject-name">2024년 기출</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('기출문제', '2023년')">
+        <span class="subject-num year-badge">2023</span>
+        <span class="subject-name">2023년 기출</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('기출문제', '2022년')">
+        <span class="subject-num year-badge">2022</span>
+        <span class="subject-name">2022년 기출</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 과목 선택 화면 (필기) -->
+  <div id="screen-subject" class="screen">
+    <div class="header">
+      <button class="back-btn" onclick="goHome()">← 홈</button>
+      <h2>과목 선택</h2>
+    </div>
+    <div class="subject-list">
+      <div class="subject-card all" onclick="startQuiz('필기', '전체')">
+        <span class="subject-num">ALL</span>
+        <span class="subject-name">전체 과목 랜덤</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('필기', '소프트웨어 설계')">
+        <span class="subject-num">1과목</span>
+        <span class="subject-name">소프트웨어 설계</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('필기', '소프트웨어 개발')">
+        <span class="subject-num">2과목</span>
+        <span class="subject-name">소프트웨어 개발</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('필기', '데이터베이스 구축')">
+        <span class="subject-num">3과목</span>
+        <span class="subject-name">데이터베이스 구축</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('필기', '프로그래밍 언어 활용')">
+        <span class="subject-num">4과목</span>
+        <span class="subject-name">프로그래밍 언어 활용</span>
+      </div>
+      <div class="subject-card" onclick="startQuiz('필기', '정보시스템 구축관리')">
+        <span class="subject-num">5과목</span>
+        <span class="subject-name">정보시스템 구축관리</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 문제 풀이 화면 -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <button class="back-btn" onclick="exitQuiz()">✕ 종료</button>
+      <div class="quiz-info">
+        <span id="quiz-mode-badge" class="badge"></span>
+        <span id="quiz-subject-badge" class="badge subject"></span>
+      </div>
+      <div class="quiz-progress-text"><span id="q-current">1</span> / <span id="q-total">10</span></div>
+    </div>
+    <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+
+    <div class="question-container">
+      <div id="question-subject-tag" class="q-subject-tag"></div>
+      <div id="question-text" class="question-text"></div>
+
+      <!-- 코드 블록 -->
+      <div id="code-block" class="code-block" style="display:none">
+        <div class="code-lang-tag" id="code-lang-tag"></div>
+        <pre id="code-content"></pre>
+      </div>
+
+      <!-- 필기 선택지 -->
+      <div id="options-container" class="options-container" style="display:none"></div>
+
+      <!-- 실기/코딩 입력 -->
+      <div id="input-container" class="input-container" style="display:none">
+        <input type="text" id="answer-input" class="answer-input" placeholder="답을 입력하세요" autocomplete="off">
+        <button class="submit-btn" onclick="submitTextAnswer()">제출</button>
+      </div>
+
+      <!-- 결과 표시 -->
+      <div id="result-container" class="result-container" style="display:none">
+        <div id="result-badge" class="result-badge"></div>
+        <div id="result-explanation" class="result-explanation"></div>
+        <button class="next-btn" onclick="nextQuestion()">다음 문제 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 결과 화면 -->
+  <div id="screen-result" class="screen">
+    <div class="result-screen">
+      <div id="result-emoji" class="big-emoji"></div>
+      <h2>풀이 완료!</h2>
+      <div class="score-circle">
+        <span id="final-score">0</span>
+        <small>/ <span id="final-total">10</span></small>
+      </div>
+      <div id="final-rate" class="final-rate"></div>
+      <div id="final-message" class="final-message"></div>
+
+      <div class="wrong-section" id="wrong-section">
+        <h3>틀린 문제 복습</h3>
+        <div id="wrong-list" class="wrong-list"></div>
+      </div>
+
+      <div class="result-btns">
+        <button onclick="retryQuiz()">다시 풀기</button>
+        <button class="secondary" onclick="goHome()">홈으로</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
