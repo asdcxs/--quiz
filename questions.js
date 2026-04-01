@@ -2310,19 +2310,18 @@ WHERE EMPNO > 100 AND SAL >= 3000
     },
     {
       subject: "SQL", lang: "sql",
-      question: "다음 SQL문을 완성하시오.\n<학생> 테이블에 VARCHAR(20) '주소' 속성 추가:",
+      question: "다음 SQL의 ①, ②에 들어갈 키워드를 쓰시오.\n<학생> 테이블에 VARCHAR(20) '주소' 속성 추가:",
       code:
 `( ① ) TABLE 학생 ( ② ) 주소 VARCHAR(20);`,
-      answer: ["ALTER TABLE 학생 ADD 주소 VARCHAR(20)"],
-      explanation: "ALTER TABLE: 테이블 구조 변경\nADD: 속성(컬럼) 추가\nDROP: 속성 삭제\nMODIFY/ALTER: 속성 변경"
+      answer: ["① ALTER ② ADD", "ALTER, ADD"],
+      explanation: "① ALTER: 테이블 구조 변경 명령\n② ADD: 속성(컬럼) 추가\n\nALTER TABLE 명령어:\n- ADD: 속성 추가\n- DROP: 속성 삭제\n- MODIFY: 속성 변경"
     },
     {
       subject: "SQL", lang: "sql",
-      question: "다음 SQL문을 작성하시오.\n<student> 테이블의 name 속성으로 idx_name 인덱스 생성:",
+      question: "다음 SQL의 빈칸에 들어갈 키워드를 쓰시오.\n<student> 테이블의 name 속성으로 idx_name 인덱스 생성:",
       code:
-`-- stid, name, score, deptid 컬럼을 가진 student 테이블
--- 'name' 속성에 'idx_name' 인덱스 생성`,
-      answer: ["CREATE INDEX idx_name ON student(name)"],
+`( ? ) INDEX idx_name ON student(name);`,
+      answer: ["CREATE"],
       explanation: "CREATE INDEX 인덱스명 ON 테이블명(속성명)\nCREATE UNIQUE INDEX: 유일한 인덱스\nDROP INDEX: 인덱스 삭제"
     },
     {
@@ -2337,16 +2336,15 @@ ORDER BY 가입일 ( ② );`,
     },
     {
       subject: "SQL", lang: "sql",
-      question: "다음 SQL문을 작성하시오.\n<성적> 테이블에서 과목별 평균 90점 이상인 과목이름, 최소/최대 점수 조회:",
+      question: "다음 SQL의 ①, ②, ③에 들어갈 집계 함수를 쓰시오.\n<성적> 테이블에서 과목별 평균 90점 이상인 과목의 최소/최대 점수 조회:",
       code:
-`-- 조건: WHERE 불사용, GROUP BY와 HAVING 사용
--- MIN/MAX 집계함수와 AS 별칭 사용
-SELECT 과목이름, ( ) AS 최소점수, ( ) AS 최대점수
+`SELECT 과목이름, ( ① )(점수) AS 최소점수,
+                  ( ② )(점수) AS 최대점수
 FROM 성적
 GROUP BY 과목이름
-HAVING ( );`,
-      answer: ["SELECT 과목이름, MIN(점수) AS 최소점수, MAX(점수) AS 최대점수 FROM 성적 GROUP BY 과목이름 HAVING AVG(점수) >= 90"],
-      explanation: "GROUP BY: 그룹화\nHAVING: 그룹 조건 (WHERE와 유사하나 그룹에 적용)\nMIN(점수) AS 최소점수: 최솟값에 별칭\nAVG(점수) >= 90: 평균 90 이상 그룹만"
+HAVING ( ③ )(점수) >= 90;`,
+      answer: ["① MIN ② MAX ③ AVG", "MIN, MAX, AVG"],
+      explanation: "① MIN(점수): 그룹 내 최솟값\n② MAX(점수): 그룹 내 최댓값\n③ AVG(점수): 그룹 평균으로 HAVING 조건\n\nHAVING: 집계 결과에 조건 적용\nWHERE: 그룹화 전 행에 조건 적용"
     }
   ],
 
@@ -3755,9 +3753,9 @@ print(result)`,
     },
     {
       subject: "예상_SQL",
-      question: "학생(학번, 이름, 점수) 테이블에서 점수가 높은 순으로 상위 3명을 조회하는 SQL을 쓰시오.",
-      answer: ["SELECT * FROM 학생 ORDER BY 점수 DESC LIMIT 3", "SELECT TOP 3 * FROM 학생 ORDER BY 점수 DESC"],
-      explanation: "ORDER BY 컬럼 DESC: 내림차순 정렬\nLIMIT n: MySQL/PostgreSQL에서 상위 n개\nTOP n: SQL Server에서 상위 n개\nROWNUM: Oracle에서 행 수 제한"
+      question: "다음 SQL의 빈칸에 들어갈 키워드를 쓰시오.\n점수가 높은 순으로 상위 3명 조회:\n\nSELECT * FROM 학생 ORDER BY 점수 ( ? ) LIMIT 3;",
+      answer: ["DESC"],
+      explanation: "ORDER BY 정렬 키워드:\n- DESC: 내림차순 (Descending)\n- ASC: 오름차순 (Ascending, 기본값)\nLIMIT n: 상위 n개 행만 반환 (MySQL)"
     },
     {
       subject: "예상_SQL",
