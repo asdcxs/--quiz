@@ -428,37 +428,34 @@ function shuffle(arr) {
 function highlight(code, lang) {
   let h = escapeHtml(code);
 
+  // 키워드를 한 번에 치환 (이중 치환 방지)
+  function kwReplace(text, kwList, caseSensitive) {
+    const kwSet = caseSensitive ? new Set(kwList) : new Set(kwList.map(k => k.toUpperCase()));
+    return text.replace(/\b(\w+)\b/g, (m) => {
+      const check = caseSensitive ? m : m.toUpperCase();
+      return kwSet.has(check) ? `<span class="kw">${m}</span>` : m;
+    });
+  }
+
   if (lang === 'c' || lang === 'java') {
     const keywords = lang === 'c'
       ? ['int','char','float','double','void','if','else','for','while','do','return','struct','typedef','include','define','printf','scanf','break','continue','switch','case','default','static','const','long','short','unsigned','sizeof']
-      : ['public','private','protected','static','void','int','String','boolean','char','double','float','long','class','interface','extends','implements','new','return','if','else','for','while','do','break','continue','switch','case','default','this','super','null','true','false','System','println','print'];
-    keywords.forEach(kw => {
-      h = h.replace(new RegExp(`\\b${kw}\\b`, 'g'), `<span class="kw">${kw}</span>`);
-    });
-    // 숫자
+      : ['public','private','protected','static','void','int','String','boolean','char','double','float','long','class','interface','extends','implements','new','return','if','else','for','while','do','break','continue','switch','case','default','this','super','null','true','false','System','println','print','abstract','final','try','catch','finally','throw','throws'];
+    h = kwReplace(h, keywords, true);
     h = h.replace(/\b(\d+)\b/g, '<span class="nm">$1</span>');
-    // 문자열
     h = h.replace(/(&quot;.*?&quot;)/g, '<span class="st">$1</span>');
-    // 주석
     h = h.replace(/(\/\/.*)/g, '<span class="cm">$1</span>');
     h = h.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cm">$1</span>');
-    // #include
-    h = h.replace(/(<span class="kw">include<\/span>.*)/g, (m, p) =>
-      `<span class="cm">${p.replace(/<[^>]+>/g,'')}</span>`);
     h = h.replace(/(#\w+)/g, '<span class="kw">$1</span>');
   } else if (lang === 'python') {
-    const keywords = ['def','class','return','if','elif','else','for','while','in','not','and','or','import','from','as','with','try','except','finally','raise','pass','break','continue','lambda','True','False','None','print','range','len','list','dict','set','tuple','str','int','float','sorted','filter','map','sum','global','self'];
-    keywords.forEach(kw => {
-      h = h.replace(new RegExp(`\\b${kw}\\b`, 'g'), `<span class="kw">${kw}</span>`);
-    });
+    const keywords = ['def','class','return','if','elif','else','for','while','in','not','and','or','import','from','as','with','try','except','finally','raise','pass','break','continue','lambda','True','False','None','print','range','len','list','dict','set','tuple','str','int','float','sorted','filter','map','sum','global','self','nonlocal'];
+    h = kwReplace(h, keywords, true);
     h = h.replace(/\b(\d+)\b/g, '<span class="nm">$1</span>');
     h = h.replace(/(&quot;.*?&quot;|&#039;.*?&#039;|f&quot;.*?&quot;)/g, '<span class="st">$1</span>');
     h = h.replace(/(#.*)/g, '<span class="cm">$1</span>');
   } else if (lang === 'sql') {
     const keywords = ['SELECT','FROM','WHERE','GROUP','BY','HAVING','ORDER','JOIN','LEFT','RIGHT','INNER','OUTER','FULL','ON','INSERT','INTO','UPDATE','SET','DELETE','CREATE','TABLE','DROP','ALTER','ADD','INDEX','VIEW','AS','DISTINCT','COUNT','SUM','AVG','MAX','MIN','AND','OR','NOT','NULL','IS','IN','LIKE','BETWEEN','COMMIT','ROLLBACK','SAVEPOINT'];
-    keywords.forEach(kw => {
-      h = h.replace(new RegExp(`\\b${kw}\\b`, 'gi'), `<span class="kw">${kw}</span>`);
-    });
+    h = kwReplace(h, keywords, false);
     h = h.replace(/(&quot;.*?&quot;|&#039;.*?&#039;)/g, '<span class="st">$1</span>');
     h = h.replace(/\b(\d+)\b/g, '<span class="nm">$1</span>');
     h = h.replace(/(--.*)/g, '<span class="cm">$1</span>');
