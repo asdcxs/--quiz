@@ -10,6 +10,38 @@ let score = 0;
 let wrongList = [];
 let stats = { solved: 0, correct: 0 };
 
+// ── 맞춘 문제 기록 ──
+function solvedKey(q) {
+  return (q.question || '').slice(0, 80);
+}
+function saveSolved(q) {
+  const solved = JSON.parse(localStorage.getItem('solved_set') || '{}');
+  solved[solvedKey(q)] = true;
+  localStorage.setItem('solved_set', JSON.stringify(solved));
+}
+function isSolved(q) {
+  const solved = JSON.parse(localStorage.getItem('solved_set') || '{}');
+  return !!solved[solvedKey(q)];
+}
+function getSolvedCount() {
+  return Object.keys(JSON.parse(localStorage.getItem('solved_set') || '{}')).length;
+}
+
+// 맞춘 문제 제외 토글
+let skipSolved = JSON.parse(localStorage.getItem('skip_solved') || 'false');
+function toggleSkipSolved() {
+  skipSolved = !skipSolved;
+  localStorage.setItem('skip_solved', JSON.stringify(skipSolved));
+  updateSkipBadge();
+}
+function updateSkipBadge() {
+  const btn = document.getElementById('skip-solved-btn');
+  if (!btn) return;
+  const cnt = getSolvedCount();
+  btn.textContent = skipSolved ? `✅ 맞춘 문제 제외 중 (${cnt})` : `☑️ 맞춘 문제 포함 (${cnt})`;
+  btn.className = 'skip-solved-btn' + (skipSolved ? ' active' : '');
+}
+
 // ── 오답노트 ──
 function wrongKey(q) {
   return (q.question || '').slice(0, 80);
@@ -114,6 +146,7 @@ function goHome() {
   showScreen('screen-home');
   loadStats();
   updateWrongBadge();
+  updateSkipBadge();
 }
 
 // ── 모드 선택 ──
@@ -164,6 +197,16 @@ function startQuiz(mode, subject) {
       } else {
         pool = pool.filter(q => q.subject === subject);
       }
+    }
+  }
+
+  // 맞춘 문제 제외 옵션 (오답노트 제외)
+  if (skipSolved && mode !== '오답노트') {
+    pool = pool.filter(q => !isSolved(q));
+    if (pool.length === 0) {
+      alert('모든 문제를 맞추셨습니다! 🎉\n홈에서 "맞춘 문제 포함" 으로 전환하세요.');
+      goHome();
+      return;
     }
   }
 
@@ -273,7 +316,8 @@ function selectOption(selected) {
     saveWrongStat(q);
   } else {
     score++;
-    if (currentMode !== '오답노트') removeWrongStat(q); // 맞추면 오답노트에서 제거
+    saveSolved(q);
+    if (currentMode !== '오답노트') removeWrongStat(q);
   }
   stats.solved++;
   if (isCorrect) stats.correct++;
@@ -296,6 +340,7 @@ function submitTextAnswer() {
   if (correct) {
     score++;
     stats.correct++;
+    saveSolved(q);
     if (currentMode !== '오답노트') removeWrongStat(q);
   } else {
     wrongList.push({ q, userAnswer: userAns });
@@ -451,12 +496,12 @@ function highlight(code, lang) {
     const keywords = ['def','class','return','if','elif','else','for','while','in','not','and','or','import','from','as','with','try','except','finally','raise','pass','break','continue','lambda','True','False','None','print','range','len','list','dict','set','tuple','str','int','float','sorted','filter','map','sum','global','self','nonlocal'];
     h = kwReplace(h, keywords, true);
     h = h.replace(/\b(\d+)\b/g, '<span class="nm">$1</span>');
-    h = h.replace(/(&quot;.*?&quot;|&#039;.*?&#039;|f&quot;.*?&quot;)/g, '<span class="st">$1</span>');
+    h = h.replace(/(&quot;.*?&quot;|'.*?'|f&quot;.*?&quot;)/g, '<span class="st">$1</span>');
     h = h.replace(/(#.*)/g, '<span class="cm">$1</span>');
   } else if (lang === 'sql') {
     const keywords = ['SELECT','FROM','WHERE','GROUP','BY','HAVING','ORDER','JOIN','LEFT','RIGHT','INNER','OUTER','FULL','ON','INSERT','INTO','UPDATE','SET','DELETE','CREATE','TABLE','DROP','ALTER','ADD','INDEX','VIEW','AS','DISTINCT','COUNT','SUM','AVG','MAX','MIN','AND','OR','NOT','NULL','IS','IN','LIKE','BETWEEN','COMMIT','ROLLBACK','SAVEPOINT'];
     h = kwReplace(h, keywords, false);
-    h = h.replace(/(&quot;.*?&quot;|&#039;.*?&#039;)/g, '<span class="st">$1</span>');
+    h = h.replace(/(&quot;.*?&quot;|'.*?')/g, '<span class="st">$1</span>');
     h = h.replace(/\b(\d+)\b/g, '<span class="nm">$1</span>');
     h = h.replace(/(--.*)/g, '<span class="cm">$1</span>');
   }
@@ -469,11 +514,11 @@ function escapeHtml(text) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/"/g, '&quot;');
 }
 
 // ── 초기화 ──
 calcDday();
 loadStats();
 updateWrongBadge();
+updateSkipBadge();

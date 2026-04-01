@@ -183,6 +183,17 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
 .mode-card.odap .mode-icon { margin-bottom: 0; font-size: 28px; }
 .mode-card.odap .mode-title { font-size: 18px; margin-bottom: 2px; }
 .mode-card.odap .mode-desc { font-size: 12px; }
+/* 맞춘 문제 제외 토글 */
+.skip-solved-btn {
+  display: block; width: 100%; margin-bottom: 16px;
+  background: #1a1a2e; border: 1px solid #2a2a42;
+  border-radius: 10px; padding: 10px 16px;
+  color: #888; font-size: 13px; cursor: pointer; transition: all .2s;
+}
+.skip-solved-btn:hover { border-color: #6366f1; }
+.skip-solved-btn.active {
+  background: #0f2a1a; border-color: #22c55e; color: #22c55e;
+}
 .wrong-cnt-badge {
   display: inline-block; background: #ef4444; color: #fff;
   font-size: 11px; font-weight: 700; padding: 2px 7px;
