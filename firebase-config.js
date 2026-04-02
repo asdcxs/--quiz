@@ -1,12 +1,9 @@
-// ============================================================
-//  Firebase 설정 — 본인 프로젝트 config로 교체하세요
-//  https://console.firebase.google.com → 프로젝트 설정 → 웹 앱
-// ============================================================
 const firebaseConfig = {
-  apiKey: "PASTE_HERE",
-  authDomain: "PASTE_HERE",
-  projectId: "PASTE_HERE",
-  storageBucket: "PASTE_HERE",
-  messagingSenderId: "PASTE_HERE",
-  appId: "PASTE_HERE"
+  apiKey: "AIzaSyDX4IvxV0cxOrvHEgaVqboi9TNEH2jU4FA",
+  authDomain: "quizapp-3656c.firebaseapp.com",
+  projectId: "quizapp-3656c",
+  storageBucket: "quizapp-3656c.firebasestorage.app",
+  messagingSenderId: "786352750813",
+  appId: "1:786352750813:web:ad27d1df69c06e7255db34",
+  measurementId: "G-D4LMJN43H9"
 };
