@@ -517,8 +517,139 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
+// ============================================================
+//  Firebase 인증 + Firestore 동기화
+//  로그인 없이 로컬 사용 가능, 로그인 시 클라우드 동기화
+// ============================================================
+let fb = { app: null, auth: null, db: null, user: null };
+
+function initFirebase() {
+  if (!window.firebase || !firebaseConfig || firebaseConfig.apiKey === 'PASTE_HERE') return;
+  try {
+    fb.app = firebase.initializeApp(firebaseConfig);
+    fb.auth = firebase.auth();
+    fb.db = firebase.firestore();
+    // 로그인 상태 감지
+    fb.auth.onAuthStateChanged(user => {
+      fb.user = user;
+      updateAuthUI();
+      if (user) syncFromCloud();
+    });
+  } catch (e) { console.warn('Firebase init skipped:', e); }
+}
+
+function updateAuthUI() {
+  const loggedOut = document.getElementById('auth-logged-out');
+  const loggedIn = document.getElementById('auth-logged-in');
+  if (!loggedOut || !loggedIn) return;
+  if (fb.user) {
+    loggedOut.style.display = 'none';
+    loggedIn.style.display = 'flex';
+    document.getElementById('auth-photo').src = fb.user.photoURL || '';
+    document.getElementById('auth-name').textContent = fb.user.displayName || '사용자';
+  } else {
+    loggedOut.style.display = 'block';
+    loggedIn.style.display = 'none';
+  }
+}
+
+function firebaseLogin() {
+  if (!fb.auth) { alert('Firebase 설정이 필요합니다.\nfirebase-config.js를 확인하세요.'); return; }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  fb.auth.signInWithPopup(provider).catch(e => {
+    if (e.code !== 'auth/popup-closed-by-user') alert('로그인 실패: ' + e.message);
+  });
+}
+
+function firebaseLogout() {
+  if (fb.auth) fb.auth.signOut();
+}
+
+// ── 클라우드 → 로컬 동기화 (로그인 직후) ──
+async function syncFromCloud() {
+  if (!fb.user || !fb.db) return;
+  setSyncStatus('동기화 중...');
+  try {
+    const doc = await fb.db.collection('users').doc(fb.user.uid).get();
+    if (doc.exists) {
+      const cloud = doc.data();
+      // 로컬과 클라우드 병합 (둘 다 합산)
+      mergeWrongStats(cloud.wrong_stats);
+      mergeSolvedSet(cloud.solved_set);
+      if (cloud.exam_date) localStorage.setItem('exam_date', cloud.exam_date);
+      if (cloud.stats) {
+        const local = { solved: stats.solved, correct: stats.correct };
+        stats.solved = Math.max(local.solved, cloud.stats.solved || 0);
+        stats.correct = Math.max(local.correct, cloud.stats.correct || 0);
+        saveStats();
+      }
+      loadStats();
+      updateWrongBadge();
+      updateSkipBadge();
+      calcDday();
+    }
+    // 병합 후 클라우드에 최종 상태 업로드
+    await pushToCloud();
+    setSyncStatus('동기화됨 ✓');
+  } catch (e) {
+    console.error('Sync error:', e);
+    setSyncStatus('동기화 실패');
+  }
+}
+
+// ── 로컬 → 클라우드 업로드 ──
+async function pushToCloud() {
+  if (!fb.user || !fb.db) return;
+  try {
+    await fb.db.collection('users').doc(fb.user.uid).set({
+      wrong_stats: JSON.parse(localStorage.getItem('wrong_stats') || '{}'),
+      solved_set: JSON.parse(localStorage.getItem('solved_set') || '{}'),
+      exam_date: localStorage.getItem('exam_date') || DEFAULT_EXAM_DATE,
+      stats: { solved: stats.solved, correct: stats.correct },
+      updated_at: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+  } catch (e) { console.error('Push error:', e); }
+}
+
+// ── 병합 헬퍼 ──
+function mergeWrongStats(cloud) {
+  if (!cloud) return;
+  const local = loadWrongStats();
+  for (const [key, val] of Object.entries(cloud)) {
+    if (!local[key]) {
+      local[key] = val;
+    } else {
+      local[key].count = Math.max(local[key].count, val.count);
+    }
+  }
+  localStorage.setItem('wrong_stats', JSON.stringify(local));
+}
+
+function mergeSolvedSet(cloud) {
+  if (!cloud) return;
+  const local = JSON.parse(localStorage.getItem('solved_set') || '{}');
+  Object.assign(local, cloud);
+  localStorage.setItem('solved_set', JSON.stringify(local));
+}
+
+function setSyncStatus(text) {
+  const el = document.getElementById('sync-status');
+  if (el) el.textContent = text;
+}
+
+// ── 데이터 변경 시 자동 클라우드 동기화 ──
+const _origSaveWrongStat = saveWrongStat;
+saveWrongStat = function(q) { _origSaveWrongStat(q); pushToCloud(); };
+const _origRemoveWrongStat = removeWrongStat;
+removeWrongStat = function(q) { _origRemoveWrongStat(q); pushToCloud(); };
+const _origSaveSolved = saveSolved;
+saveSolved = function(q) { _origSaveSolved(q); pushToCloud(); };
+const _origSaveStats = saveStats;
+saveStats = function() { _origSaveStats(); pushToCloud(); };
+
 // ── 초기화 ──
 calcDday();
 loadStats();
 updateWrongBadge();
 updateSkipBadge();
+initFirebase();

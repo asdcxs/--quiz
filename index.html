@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>정보처리기사 문제풀이</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -12,6 +17,19 @@
   <!-- 홈 화면 -->
   <div id="screen-home" class="screen active">
     <div class="home-container">
+      <!-- 로그인/동기화 바 -->
+      <div id="auth-bar" class="auth-bar">
+        <div id="auth-logged-out" class="auth-state">
+          <button class="auth-login-btn" onclick="firebaseLogin()">🔗 로그인하여 동기화</button>
+        </div>
+        <div id="auth-logged-in" class="auth-state" style="display:none">
+          <img id="auth-photo" class="auth-photo" src="" alt="">
+          <span id="auth-name" class="auth-name"></span>
+          <span id="sync-status" class="sync-badge">동기화됨</span>
+          <button class="auth-logout-btn" onclick="firebaseLogout()">로그아웃</button>
+        </div>
+      </div>
+
       <div class="logo">📋</div>
       <h1>정보처리기사</h1>
       <p class="subtitle">문제풀이 연습</p>
