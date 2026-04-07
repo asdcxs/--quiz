@@ -202,6 +202,43 @@ h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
 }
 .mode-card.odap:hover { border-color: #ef4444; background: #200a0a; }
 .mode-card.odap .mode-icon { margin-bottom: 0; font-size: 28px; }
+
+/* ── 모의고사 카드 ── */
+.mode-card.mock {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 16px; padding: 18px 24px;
+  border-color: #3a2010;
+  background: linear-gradient(135deg, #1e0808 0%, #1e1408 100%);
+}
+.mode-card.mock:hover {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #2a0a0a 0%, #2a1a08 100%);
+}
+.mode-card.mock .mode-icon { margin-bottom: 0; font-size: 28px; }
+.mode-card.mock .mode-title { font-size: 18px; margin-bottom: 2px; color: #fbbf24; }
+.mode-card.mock .mode-desc { font-size: 12px; }
+
+/* ── 모의고사 타이머 ── */
+.mock-timer {
+  display: inline-block;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 14px; font-weight: 700;
+  background: #1e293b; color: #e2e8f0;
+  padding: 6px 12px; border-radius: 8px;
+  border: 1px solid #334155;
+  letter-spacing: 0.5px;
+}
+.mock-timer.warning {
+  background: #422006; color: #fbbf24; border-color: #92400e;
+}
+.mock-timer.danger {
+  background: #450a0a; color: #fca5a5; border-color: #991b1b;
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
 .mode-card.odap .mode-title { font-size: 18px; margin-bottom: 2px; }
 .mode-card.odap .mode-desc { font-size: 12px; }
 /* 맞춘 문제 제외 토글 */

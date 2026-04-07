@@ -2620,12 +2620,567 @@ HAVING ( ③ )(점수) >= 90;`,
   ],
 
   // ============================================================
-  //  기출문제: 실제 시험 출제 문제 (2022~2025)
+  //  기출문제: 실제 시험 출제 문제 (2020~2025)
   //  subject = "YYYY년 N회"  year = "YYYY년"
   //  코딩 문제: code + lang 포함, answer: 출력결과 배열
   //  이론 문제: answer: 단답형 배열
   // ============================================================
   기출문제: [
+
+    // ══════════════════ 2020년 1회 ══════════════════
+    {
+      subject: "2020년 1회", year: "2020년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    int c = 1;
+    switch (3) {
+        case 1: c += 3;
+        case 2: c++;
+        case 3: c = 0;
+        case 4: c += 3;
+        case 5: c -= 10;
+        default: c--;
+    }
+    printf("%d", c);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["-8"],
+      explanation: "switch(3): case 3부터 break 없이 fall-through 실행\ncase 3: c = 0\ncase 4: c = 0 + 3 = 3\ncase 5: c = 3 - 10 = -7\ndefault: c = -7 - 1 = -8"
+    },
+    {
+      subject: "2020년 1회", year: "2020년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+void align(int a[]) {
+    int temp;
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4 - i; j++)
+            if (a[j] > a[j+1]) {
+                temp = a[j];
+                a[j] = a[j+1];
+                a[j+1] = temp;
+            }
+}
+int main() {
+    int a[] = {85, 75, 50, 100, 95};
+    align(a);
+    for (int i = 0; i < 5; i++)
+        printf("%d", a[i]);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["50758595100"],
+      explanation: "버블 정렬(오름차순):\n{85, 75, 50, 100, 95} → {50, 75, 85, 95, 100}\nprintf(\"%d\")는 구분자 없이 출력 → 50758595100"
+    },
+    {
+      subject: "2020년 1회", year: "2020년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `class Main {
+    static int[] arr() {
+        int a[] = new int[4];
+        int b = a.length;
+        for (int i = 0; i < b; i++)
+            a[i] = i;
+        return a;
+    }
+    public static void main(String[] args) {
+        int a[] = arr();
+        for (int i = 0; i < a.length; i++)
+            System.out.print(a[i] + " ");
+    }
+}`,
+      lang: "java",
+      answer: ["0 1 2 3", "0 1 2 3 "],
+      explanation: "arr(): 길이 4 배열 생성, a[i] = i 채움 → {0, 1, 2, 3}\n각 원소 뒤에 공백을 붙여 출력 → 0 1 2 3"
+    },
+    {
+      subject: "2020년 1회", year: "2020년",
+      question: "<STUDENT> 테이블에 전기과 학생 50명, 전산과 학생 100명, 전자과 학생 50명이 있을 때, 다음 SQL 1, 2, 3의 실행 결과로 표시되는 튜플의 수를 각각 쓰시오.",
+      code: `1) SELECT DEPT FROM STUDENT;
+2) SELECT DISTINCT DEPT FROM STUDENT;
+3) SELECT COUNT(DISTINCT DEPT) FROM STUDENT WHERE DEPT='전산과';`,
+      lang: "sql",
+      answer: ["1) 200  2) 3  3) 1", "200, 3, 1"],
+      explanation: "1) DEPT 컬럼 전체 조회 → 50+100+50 = 200개 튜플\n2) DISTINCT DEPT → 학과 종류 3개 (전기/전산/전자)\n3) WHERE 적용 후 COUNT 결과는 1행"
+    },
+    {
+      subject: "2020년 1회", year: "2020년",
+      question: "살충제 패러독스(Pesticide Paradox)의 개념을 서술하시오.",
+      answer: ["동일한 테스트 케이스로 반복 테스트하면 더 이상 새로운 결함이 발견되지 않는 현상", "같은 테스트 케이스를 반복하면 새로운 결함을 찾을 수 없게 되는 현상"],
+      explanation: "살충제 패러독스(Pesticide Paradox): 동일한 테스트 케이스를 반복적으로 적용하면 더 이상 결함이 발견되지 않는 현상\n→ 정기적으로 테스트 케이스를 검토하고 개선하여 새로운 결함을 발견할 수 있도록 해야 함"
+    },
+
+    // ══════════════════ 2020년 2회 ══════════════════
+    {
+      subject: "2020년 2회", year: "2020년",
+      question: "다음 Java 코드에서 (가)에 들어갈 알맞은 키워드를 쓰시오.",
+      code: `class Parent {
+    void show() { System.out.println("parent"); }
+}
+class Child extends Parent {
+    void show() { System.out.println("child"); }
+}
+class Main {
+    public static void main(String[] args) {
+        Parent pa = (가) Child();
+        pa.show();
+    }
+}`,
+      lang: "java",
+      answer: ["new"],
+      explanation: "객체 생성 키워드: new\nParent 타입 변수에 Child 객체 대입(다형성) → pa.show()는 오버라이드된 child 호출\n참고: pa.show() 출력은 \"child\""
+    },
+    {
+      subject: "2020년 2회", year: "2020년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `class A {
+    private int a;
+    public A(int a) { this.a = a; }
+    public void display() { System.out.println("a=" + a); }
+}
+class B extends A {
+    public B(int a) {
+        super(a);
+        super.display();
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        B obj = new B(10);
+    }
+}`,
+      lang: "java",
+      answer: ["a=10"],
+      explanation: "new B(10) → super(10)으로 A.a = 10 설정\n→ super.display() 호출 → \"a=10\" 출력"
+    },
+    {
+      subject: "2020년 2회", year: "2020년",
+      question: "다음 Python 코드의 출력 결과를 쓰시오. (set은 순서가 없으므로 원소 구성만 일치하면 정답)",
+      code: `a = {'한국', '중국', '일본'}
+a.add('베트남')
+a.add('중국')
+a.remove('일본')
+a.update(['홍콩', '태국'])
+print(a)`,
+      lang: "python",
+      answer: ["{'한국', '중국', '베트남', '홍콩', '태국'}", "{한국, 중국, 베트남, 홍콩, 태국}"],
+      explanation: "set 연산:\nadd('베트남') → 베트남 추가\nadd('중국') → 이미 존재 (변화 없음)\nremove('일본') → 일본 제거\nupdate([홍콩, 태국]) → 두 원소 추가\n결과: {한국, 중국, 베트남, 홍콩, 태국}"
+    },
+    {
+      subject: "2020년 2회", year: "2020년",
+      question: "<학생> 테이블에서 3, 4학년의 학번과 이름을 IN 예약어를 사용하여 조회하는 SQL문을 작성하시오.",
+      answer: ["SELECT 학번, 이름 FROM 학생 WHERE 학년 IN (3, 4);", "SELECT 학번, 이름 FROM 학생 WHERE 학년 IN(3,4)"],
+      explanation: "IN 절: 컬럼 값이 목록 내 값 중 하나와 일치하면 TRUE\nWHERE 학년 IN (3, 4) ≡ WHERE 학년 = 3 OR 학년 = 4"
+    },
+    {
+      subject: "2020년 2회", year: "2020년",
+      question: "<student> 테이블의 'name' 속성에 'idx_name'이라는 인덱스를 생성하는 SQL문을 작성하시오.",
+      answer: ["CREATE INDEX idx_name ON student(name);", "CREATE INDEX idx_name ON student (name)"],
+      explanation: "인덱스 생성 구문:\nCREATE INDEX 인덱스명 ON 테이블명(컬럼명);\n인덱스: 검색 속도를 향상시키는 자료구조"
+    },
+
+    // ══════════════════ 2020년 3회 ══════════════════
+    {
+      subject: "2020년 3회", year: "2020년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int r1() { return 4; }
+int r10() { return 30 + r1(); }
+int r100() { return 200 + r10(); }
+int main() {
+    printf("%d\\n", r100());
+    return 0;
+}`,
+      lang: "c",
+      answer: ["234"],
+      explanation: "함수 호출 체인:\nr1() = 4\nr10() = 30 + 4 = 34\nr100() = 200 + 34 = 234"
+    },
+    {
+      subject: "2020년 3회", year: "2020년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        int i = 0, c = 0;
+        while (i < 10) {
+            i++;
+            c *= i;
+        }
+        System.out.println(c);
+    }
+}`,
+      lang: "java",
+      answer: ["0"],
+      explanation: "c는 0으로 초기화. 매 반복마다 c *= i 수행하지만\n0에 어떤 수를 곱해도 0\n최종 c = 0"
+    },
+    {
+      subject: "2020년 3회", year: "2020년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        int i = 0, sum = 0;
+        while (i < 10) {
+            i++;
+            if (i % 2 == 1) continue;
+            sum += i;
+        }
+        System.out.println(sum);
+    }
+}`,
+      lang: "java",
+      answer: ["30"],
+      explanation: "1~10 중 홀수는 continue로 건너뛰고 짝수만 합산\n2 + 4 + 6 + 8 + 10 = 30"
+    },
+    {
+      subject: "2020년 3회", year: "2020년",
+      question: "<학생> 테이블에서 '이름'이 \"민수\"인 튜플을 삭제하는 SQL문을 작성하시오.",
+      answer: ["DELETE FROM 학생 WHERE 이름 = '민수';", "DELETE FROM 학생 WHERE 이름='민수'"],
+      explanation: "DELETE 구문:\nDELETE FROM 테이블명 WHERE 조건;\n조건에 해당하는 모든 튜플(행)을 삭제"
+    },
+    {
+      subject: "2020년 3회", year: "2020년",
+      question: "<성적> 테이블에서 과목별 점수의 평균이 90점 이상인 '과목이름', '최소점수', '최대점수'를 검색하는 SQL문을 작성하시오. (WHERE 사용 금지, GROUP BY/HAVING 사용, AS로 별칭)",
+      answer: ["SELECT 과목이름, MIN(점수) AS 최소점수, MAX(점수) AS 최대점수 FROM 성적 GROUP BY 과목이름 HAVING AVG(점수) >= 90;"],
+      explanation: "GROUP BY 과목이름: 과목별로 그룹화\nHAVING AVG(점수) >= 90: 그룹 조건 (집계함수 사용)\nMIN/MAX: 그룹 내 최소/최대\nAS: 컬럼 별칭"
+    },
+
+    // ══════════════════ 2020년 4회 ══════════════════
+    {
+      subject: "2020년 4회", year: "2020년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    char *p = "KOREA";
+    printf("%s\\n", p);
+    printf("%s\\n", p+3);
+    printf("%c\\n", *p);
+    printf("%c\\n", *(p+3));
+    printf("%c\\n", *p+2);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["KOREA\nEA\nK\nE\nM"],
+      explanation: "p = \"KOREA\"\np → \"KOREA\"\np+3 → \"EA\" (3번째부터)\n*p → 'K'\n*(p+3) → 'E'\n*p+2 → 'K' + 2 = 'M' (ASCII 75 → 77)"
+    },
+    {
+      subject: "2020년 4회", year: "2020년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `class Parent {
+    public int compute(int num) {
+        if (num <= 1) return num;
+        return compute(num - 1) + compute(num - 2);
+    }
+}
+class Child extends Parent {
+    public int compute(int num) {
+        if (num <= 1) return num;
+        return compute(num - 1) + compute(num - 3);
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Parent obj = new Child();
+        System.out.print(obj.compute(4));
+    }
+}`,
+      lang: "java",
+      answer: ["1"],
+      explanation: "Parent 참조 + Child 객체 → 오버라이드된 Child.compute() 호출\ncompute(4) = compute(3) + compute(1)\ncompute(3) = compute(2) + compute(0)\ncompute(2) = compute(1) + compute(-1) = 1 + (-1) = 0\ncompute(3) = 0 + 0 = 0\ncompute(4) = 0 + 1 = 1"
+    },
+    {
+      subject: "2020년 4회", year: "2020년",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `lol = [[1,2,3], [4,5], [6,7,8,9]]
+print(lol[0])
+print(lol[2][1])
+for sub in lol:
+    for item in sub:
+        print(item, end='')
+    print()`,
+      lang: "python",
+      answer: ["[1, 2, 3]\n7\n123\n45\n6789"],
+      explanation: "lol[0] = [1, 2, 3]\nlol[2][1] = 7\n중첩 for: 각 sub의 원소들을 줄 단위로 출력\n[1,2,3] → \"123\"\n[4,5] → \"45\"\n[6,7,8,9] → \"6789\""
+    },
+    {
+      subject: "2020년 4회", year: "2020년",
+      question: "다음은 변수 n에 저장된 10진수를 2진수로 변환하는 Java 프로그램이다. (1번)과 (2번)에 들어갈 답을 쓰시오.",
+      code: `class Main {
+    public static void main(String[] args) {
+        int[] a = new int[8];
+        int i = 0;
+        int n = 10;
+        while ( (1번) ) {
+            a[i++] = (2번);
+            n /= 2;
+        }
+        for (i = 7; i >= 0; i--)
+            System.out.print(a[i]);
+    }
+}`,
+      lang: "java",
+      answer: ["(1) n > 0  (2) n % 2", "(1번) n>0  (2번) n%2"],
+      explanation: "10진수 → 2진수 변환:\n반복 조건 (1) n > 0\n나머지 추출 (2) n % 2\nn=10일 때 a = [0,1,0,1,0,0,0,0]을 역순 출력 → 00001010"
+    },
+    {
+      subject: "2020년 4회", year: "2020년",
+      question: "<학생> 테이블에서 학과별 튜플의 개수를 검색하는 SQL문을 작성하시오. (GROUP BY 필수, AS로 별칭, WHERE 금지)",
+      answer: ["SELECT 학과, COUNT(*) AS 학과별튜플수 FROM 학생 GROUP BY 학과;"],
+      explanation: "GROUP BY 학과: 학과별로 그룹화\nCOUNT(*): 각 그룹의 행 개수\nAS 학과별튜플수: 컬럼 별칭"
+    },
+
+    // ══════════════════ 2021년 1회 ══════════════════
+    {
+      subject: "2021년 1회", year: "2021년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+struct insa {
+    char name[10];
+    int age;
+} a[] = {{"Kim",28}, {"Lee",38}, {"Park",42}, {"Choi",31}};
+int main() {
+    struct insa *p;
+    p = a;
+    p++;
+    printf("%s\\n", p->name);
+    printf("%d\\n", p->age);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["Lee\n38"],
+      explanation: "p = a → 배열 첫 원소(a[0]) 가리킴\np++ → 다음 구조체(a[1] = {Lee, 38}) 가리킴\np->name = \"Lee\"\np->age = 38"
+    },
+    {
+      subject: "2021년 1회", year: "2021년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        int arr[][] = new int[][]{{45,50,75},{89}};
+        System.out.println(arr[0].length);
+        System.out.println(arr[1].length);
+        System.out.println(arr[0][0]);
+        System.out.println(arr[0][1]);
+        System.out.println(arr[1][0]);
+    }
+}`,
+      lang: "java",
+      answer: ["3\n1\n45\n50\n89"],
+      explanation: "들쭉날쭉(jagged) 배열:\narr[0] = {45, 50, 75} → length 3\narr[1] = {89} → length 1\narr[0][0]=45, arr[0][1]=50, arr[1][0]=89"
+    },
+    {
+      subject: "2021년 1회", year: "2021년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        int i, j;
+        for (j = 0, i = 0; i <= 5; i++) {
+            j += i;
+            System.out.print(i);
+            if (i == 5) {
+                System.out.print("=");
+                System.out.print(j);
+            } else {
+                System.out.print("+");
+            }
+        }
+    }
+}`,
+      lang: "java",
+      answer: ["0+1+2+3+4+5=15"],
+      explanation: "j는 0~i까지의 누적합 (i=5에서 0+1+2+3+4+5=15)\ni=0..4: \"i+\" 출력\ni=5: \"5=15\" 출력\n결과: 0+1+2+3+4+5=15"
+    },
+    {
+      subject: "2021년 1회", year: "2021년",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `class good:
+    li = ["seoul", "kyeonggi", "inchon", "daejeon", "daegu", "pusan"]
+
+g = good()
+str01 = ''
+for i in g.li:
+    str01 = str01 + i[0]
+print(str01)`,
+      lang: "python",
+      answer: ["skiddp"],
+      explanation: "각 도시명의 첫 글자만 추출하여 연결:\ns(eoul) + k(yeonggi) + i(nchon) + d(aejeon) + d(aegu) + p(usan)\n= skiddp"
+    },
+    {
+      subject: "2021년 1회", year: "2021년",
+      question: "<EMP_TBL>(EMPNO, SAL): (100, 1500), (200, 3000), (300, 2000) 데이터가 있을 때, 다음 SQL의 실행 결과를 쓰시오.",
+      code: `SELECT COUNT(*) FROM EMP_TBL
+WHERE EMPNO > 100 AND SAL >= 3000 OR EMPNO = 200;`,
+      lang: "sql",
+      answer: ["1"],
+      explanation: "AND가 OR보다 우선순위 높음\n→ (EMPNO>100 AND SAL>=3000) OR (EMPNO=200)\n(100,1500): F | F = F\n(200,3000): T | T = T ✓\n(300,2000): F | F = F\n매칭 1행 → COUNT(*) = 1"
+    },
+
+    // ══════════════════ 2021년 2회 ══════════════════
+    {
+      subject: "2021년 2회", year: "2021년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int mp(int base, int exp) {
+    int res = 1;
+    for (int i = 0; i < exp; i++)
+        res *= base;
+    return res;
+}
+int main() {
+    int res;
+    res = mp(2, 10);
+    printf("%d", res);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["1024"],
+      explanation: "mp(2, 10): 2를 10번 곱함 → 2^10 = 1024"
+    },
+    {
+      subject: "2021년 2회", year: "2021년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    int ary[3];
+    int s = 0;
+    *(ary + 0) = 1;
+    ary[1] = *(ary + 0) + 2;
+    ary[2] = *ary + 3;
+    for (int i = 0; i < 3; i++) {
+        s = s + ary[i];
+    }
+    printf("%d", s);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["8"],
+      explanation: "*(ary+0) = 1 → ary[0] = 1\nary[1] = ary[0] + 2 = 3\nary[2] = *ary + 3 = ary[0] + 3 = 4\nsum = 1 + 3 + 4 = 8"
+    },
+    {
+      subject: "2021년 2회", year: "2021년",
+      question: "다음 Java 코드의 (가)에 들어갈 알맞은 예약어를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        System.out.println(Main.check(1));
+    }
+    (가) String check(int num) {
+        return (num >= 0) ? "positive" : "negative";
+    }
+}`,
+      lang: "java",
+      answer: ["static", "public static"],
+      explanation: "Main.check(1)처럼 클래스명으로 직접 호출 → 인스턴스 없이 호출되어야 함\n→ static 메서드로 선언해야 함"
+    },
+    {
+      subject: "2021년 2회", year: "2021년",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `a = 100
+result = 0
+for i in range(1, 3):
+    result = a >> i
+    result = result + 1
+print(result)`,
+      lang: "python",
+      answer: ["26"],
+      explanation: ">> : 비트 오른쪽 시프트 (2로 나눔)\ni=1: result = 100>>1 = 50, +1 → 51 (덮어써짐)\ni=2: result = 100>>2 = 25, +1 → 26\n최종: 26"
+    },
+    {
+      subject: "2021년 2회", year: "2021년",
+      question: "<회원> 테이블에서 이름이 \"이\"로 시작하는 회원을 가입일 내림차순으로 정렬하는 SQL문이다. 괄호 (1), (2)에 들어갈 답을 쓰시오.",
+      code: `SELECT * FROM 회원 WHERE 이름 LIKE '( 1 )' ORDER BY 가입일 ( 2 );`,
+      lang: "sql",
+      answer: ["(1) 이%  (2) DESC", "이%, DESC"],
+      explanation: "(1) LIKE '이%': '이'로 시작하는 모든 문자열\n(2) DESC: 내림차순 정렬 (오름차순은 ASC, 기본값)"
+    },
+
+    // ══════════════════ 2021년 3회 ══════════════════
+    {
+      subject: "2021년 3회", year: "2021년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    int *arr[3];
+    int a = 12, b = 24, c = 36;
+    arr[0] = &a;
+    arr[1] = &b;
+    arr[2] = &c;
+    printf("%d\\n", *arr[1] + **arr + 1);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["37"],
+      explanation: "*arr[1] = b = 24\n**arr = *arr[0] = a = 12\n24 + 12 + 1 = 37"
+    },
+    {
+      subject: "2021년 3회", year: "2021년",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+struct ggg {
+    char name[12];
+    int os, db, hab, hhab;
+};
+int main() {
+    struct ggg st[3] = { {"데이터1", 95, 88},
+                         {"데이터2", 84, 91},
+                         {"데이터3", 86, 75} };
+    struct ggg *p;
+    p = &st[0];
+    (p+1)->hab = (p+1)->os + (p+2)->db;
+    (p+1)->hhab = (p+1)->hab + p->os + p->db;
+    printf("%d\\n", (p+1)->hab + (p+1)->hhab);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["501"],
+      explanation: "(p+1)->hab = st[1].os + st[2].db = 84 + 75 = 159\n(p+1)->hhab = 159 + st[0].os + st[0].db = 159 + 95 + 88 = 342\n출력: 159 + 342 = 501"
+    },
+    {
+      subject: "2021년 3회", year: "2021년",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `class Connection {
+    private static Connection _inst = null;
+    private int count = 0;
+    public static Connection get() {
+        if (_inst == null) {
+            _inst = new Connection();
+            return _inst;
+        }
+        return _inst;
+    }
+    public void count() { count++; }
+    public int getCount() { return count; }
+}
+public class Main {
+    public static void main(String[] args) {
+        Connection conn1 = Connection.get();
+        conn1.count();
+        Connection conn2 = Connection.get();
+        conn2.count();
+        Connection conn3 = Connection.get();
+        conn3.count();
+        System.out.print(conn1.getCount());
+    }
+}`,
+      lang: "java",
+      answer: ["3"],
+      explanation: "Singleton 패턴: get() 호출 시 항상 동일 인스턴스 반환\nconn1, conn2, conn3는 모두 같은 객체\n→ count() 3회 호출 → count = 3"
+    },
+    {
+      subject: "2021년 3회", year: "2021년",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `a, b = 100, 200
+print(a == b)`,
+      lang: "python",
+      answer: ["False"],
+      explanation: "a = 100, b = 200이므로 a == b는 False\nPython의 boolean 리터럴은 첫 글자 대문자 (True/False)"
+    },
+    {
+      subject: "2021년 3회", year: "2021년",
+      question: "<A>(NAME): smith, allen, scott / <B>(RULE): s%, %t% 가 있을 때 다음 SQL의 결과를 쓰시오.",
+      code: `SELECT COUNT(*) CNT FROM A CROSS JOIN B WHERE A.NAME LIKE B.RULE;`,
+      lang: "sql",
+      answer: ["4"],
+      explanation: "CROSS JOIN: 모든 조합 (3 × 2 = 6쌍)\nLIKE 매칭 결과:\n- smith LIKE 's%' ✓\n- smith LIKE '%t%' ✓ (smith 안에 't' 있음)\n- allen LIKE 's%' ✗\n- allen LIKE '%t%' ✗\n- scott LIKE 's%' ✓\n- scott LIKE '%t%' ✓\n총 4개"
+    },
 
     // ══════════════════ 2022년 1회 ══════════════════
     {
@@ -3800,6 +4355,264 @@ print(result)`,
       question: "해시(Hash) 충돌 해결 방법 2가지를 쓰시오.",
       answer: ["개방 주소법, 체이닝", "선형 탐색/이중해시, 연결리스트"],
       explanation: "해시 충돌 해결:\n1. 개방 주소법(Open Addressing)\n   - 선형 탐사: 다음 빈 슬롯 탐색\n   - 이중 해싱: 두 번째 해시 함수 사용\n2. 체이닝(Chaining)\n   - 각 버킷에 연결 리스트 사용\n   - 충돌 시 리스트에 추가"
+    },
+
+    // ── C 언어 추가 변형 ──
+    {
+      subject: "예상_C언어",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    int a = 0xA5;
+    int b = a >> 4;
+    int c = a & 0x0F;
+    printf("%d %d", b, c);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["10 5"],
+      explanation: "0xA5 = 10100101(2) = 165\na >> 4 → 00001010(2) = 10\na & 0x0F → 00000101(2) = 5\n출력: 10 5"
+    },
+    {
+      subject: "예상_C언어",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    int arr[] = {10, 20, 30, 40, 50};
+    int *p = arr;
+    int sum = 0;
+    for (int i = 0; i < 5; i++)
+        sum += *(p + i);
+    printf("%d", sum);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["150"],
+      explanation: "*(p+i) ≡ arr[i]\nsum = 10+20+30+40+50 = 150"
+    },
+    {
+      subject: "예상_C언어",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+struct point { int x, y; };
+int main() {
+    struct point p[3] = {{1,2}, {3,4}, {5,6}};
+    int total = 0;
+    for (int i = 0; i < 3; i++)
+        total += p[i].x + p[i].y;
+    printf("%d", total);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["21"],
+      explanation: "(1+2) + (3+4) + (5+6) = 3 + 7 + 11 = 21"
+    },
+    {
+      subject: "예상_C언어",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int sumN(int n) {
+    if (n <= 0) return 0;
+    return n + sumN(n - 1);
+}
+int main() {
+    printf("%d", sumN(10));
+    return 0;
+}`,
+      lang: "c",
+      answer: ["55"],
+      explanation: "재귀 합: 1+2+...+10 = 10*11/2 = 55"
+    },
+    {
+      subject: "예상_C언어",
+      question: "다음 C 코드의 출력 결과를 쓰시오.",
+      code: `#include <stdio.h>
+int main() {
+    int x = 2;
+    int y = 0;
+    switch (x) {
+        case 1: y += 10;
+        case 2: y += 20; break;
+        case 3: y += 30;
+        default: y += 40;
+    }
+    printf("%d", y);
+    return 0;
+}`,
+      lang: "c",
+      answer: ["20"],
+      explanation: "case 2 진입: y = 0 + 20 = 20\nbreak로 빠져나옴 → 출력 20"
+    },
+
+    // ── Java 추가 변형 ──
+    {
+      subject: "예상_Java",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `class Animal {
+    String sound() { return "Some sound"; }
+}
+class Dog extends Animal {
+    String sound() { return "Woof"; }
+}
+public class Main {
+    public static void main(String[] args) {
+        Animal a = new Dog();
+        System.out.println(a.sound());
+    }
+}`,
+      lang: "java",
+      answer: ["Woof"],
+      explanation: "다형성: Animal 참조 + Dog 객체 → 오버라이드된 Dog.sound() 호출\n출력: Woof"
+    },
+    {
+      subject: "예상_Java",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        int result = 0;
+        try {
+            int a = 10 / 0;
+        } catch (ArithmeticException e) {
+            result = 100;
+        } finally {
+            result += 10;
+        }
+        System.out.println(result);
+    }
+}`,
+      lang: "java",
+      answer: ["110"],
+      explanation: "10/0 → ArithmeticException 발생\ncatch: result = 100\nfinally: result = 100 + 10 = 110\n출력: 110"
+    },
+    {
+      subject: "예상_Java",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `import java.util.ArrayList;
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.remove(0);
+        System.out.println(list);
+    }
+}`,
+      lang: "java",
+      answer: ["[2, 3]"],
+      explanation: "list = [1, 2, 3]\nremove(0): 인덱스 0의 원소(1) 제거\nlist = [2, 3]"
+    },
+    {
+      subject: "예상_Java",
+      question: "다음 Java 코드의 출력 결과를 쓰시오.",
+      code: `public class Main {
+    public static void main(String[] args) {
+        String a = "abcde";
+        System.out.println(a.length());
+        System.out.println(a.substring(1, 3));
+        System.out.println(a.indexOf('c'));
+    }
+}`,
+      lang: "java",
+      answer: ["5\nbc\n2"],
+      explanation: "length() → 5\nsubstring(1,3) → 인덱스 1부터 2까지 → \"bc\"\nindexOf('c') → 2"
+    },
+
+    // ── Python 추가 변형 ──
+    {
+      subject: "예상_Python",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `s = "Hello, World!"
+print(s[7:12])`,
+      lang: "python",
+      answer: ["World"],
+      explanation: "s[7:12]: 인덱스 7~11 → 'W','o','r','l','d' → \"World\""
+    },
+    {
+      subject: "예상_Python",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `nums = [1, 2, 3, 4, 5]
+squared = list(map(lambda x: x ** 2, nums))
+print(squared)`,
+      lang: "python",
+      answer: ["[1, 4, 9, 16, 25]"],
+      explanation: "lambda x: x**2 → 각 원소 제곱\nmap 결과를 list로 변환\n[1, 4, 9, 16, 25]"
+    },
+    {
+      subject: "예상_Python",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `result = {x: x**2 for x in range(1, 4)}
+print(result)`,
+      lang: "python",
+      answer: ["{1: 1, 2: 4, 3: 9}"],
+      explanation: "딕셔너리 컴프리헨션:\nx=1: 1→1, x=2: 2→4, x=3: 3→9\n결과: {1: 1, 2: 4, 3: 9}"
+    },
+    {
+      subject: "예상_Python",
+      question: "다음 Python 코드의 출력 결과를 쓰시오.",
+      code: `lst = [3, 1, 4, 1, 5, 9, 2, 6]
+print(sorted(lst)[:3])`,
+      lang: "python",
+      answer: ["[1, 1, 2]"],
+      explanation: "sorted(lst) → [1, 1, 2, 3, 4, 5, 6, 9]\n[:3] → 앞 3개 → [1, 1, 2]"
+    },
+
+    // ── SQL 추가 변형 ──
+    {
+      subject: "예상_SQL",
+      question: "다음 SQL의 빈칸에 들어갈 키워드를 쓰시오.\n학생 테이블과 학과 테이블을 학과코드로 조인하여 학생 이름과 학과명을 조회.\n\nSELECT 학생.이름, 학과.학과명 FROM 학생 ___ JOIN 학과 ON 학생.학과코드 = 학과.학과코드;",
+      answer: ["INNER", "INNER 또는 (생략)"],
+      explanation: "INNER JOIN: 양쪽 테이블 모두 매칭되는 행만 조회 (기본값)\nON: 조인 조건\n※ INNER 키워드는 생략 가능 (JOIN ≡ INNER JOIN)"
+    },
+    {
+      subject: "예상_SQL",
+      question: "다음 SQL의 빈칸에 들어갈 키워드를 쓰시오.\n점수 90점 이상은 'A', 80점 이상은 'B', 그 외는 'C'로 등급 표시.\n\nSELECT 이름, 점수,\n  ___\n    WHEN 점수 >= 90 THEN 'A'\n    WHEN 점수 >= 80 THEN 'B'\n    ELSE 'C'\n  END AS 등급\nFROM 학생;",
+      answer: ["CASE"],
+      explanation: "CASE WHEN ... THEN ... ELSE ... END\nSQL의 조건문 (if-else 역할)\n각 행마다 조건을 평가하여 결과 반환"
+    },
+    {
+      subject: "예상_SQL",
+      question: "UNION과 UNION ALL의 차이점을 설명하시오.",
+      answer: ["UNION은 중복 제거, UNION ALL은 중복 포함", "UNION:중복제거/UNION ALL:전체"],
+      explanation: "UNION: 두 SELECT 결과를 합치고 중복 행 제거 (성능 ↓)\nUNION ALL: 두 SELECT 결과를 합치되 중복 그대로 (성능 ↑)\n공통: 컬럼 수와 데이터 타입 일치 필요"
+    },
+
+    // ── 이론 추가 ──
+    {
+      subject: "예상_이론",
+      question: "OSI 7계층을 1계층부터 7계층까지 순서대로 쓰시오.",
+      answer: ["물리, 데이터링크, 네트워크, 전송, 세션, 표현, 응용", "Physical, Data Link, Network, Transport, Session, Presentation, Application"],
+      explanation: "OSI 7계층 (하위→상위):\n1. 물리(Physical)\n2. 데이터링크(Data Link)\n3. 네트워크(Network)\n4. 전송(Transport)\n5. 세션(Session)\n6. 표현(Presentation)\n7. 응용(Application)\n암기: 물데네전 세표응"
+    },
+    {
+      subject: "예상_이론",
+      question: "정보보안의 3대 요소(CIA Triad)를 쓰시오.",
+      answer: ["기밀성, 무결성, 가용성", "Confidentiality, Integrity, Availability"],
+      explanation: "정보보안 3대 요소(CIA):\n1. 기밀성(Confidentiality): 인가된 사용자만 접근 (암호화, 접근제어)\n2. 무결성(Integrity): 데이터 변조 방지 (해시, 디지털 서명)\n3. 가용성(Availability): 정상 사용 보장 (백업, 이중화)"
+    },
+    {
+      subject: "예상_이론",
+      question: "데이터베이스 정규화 단계 중 1NF, 2NF, 3NF의 핵심 조건을 각각 쓰시오.",
+      answer: ["1NF:원자값, 2NF:부분함수종속제거, 3NF:이행함수종속제거", "도메인 원자성 / 부분종속 제거 / 이행종속 제거"],
+      explanation: "정규화:\n- 1NF: 모든 속성이 원자값(Atomic) — 다중 값 분리\n- 2NF: 1NF + 부분 함수 종속 제거 — 복합키의 일부에만 종속되면 안됨\n- 3NF: 2NF + 이행 함수 종속 제거 — A→B, B→C 형태 제거\n- BCNF: 모든 결정자가 후보키"
+    },
+    {
+      subject: "예상_이론",
+      question: "GoF 디자인 패턴의 3가지 분류를 쓰시오.",
+      answer: ["생성, 구조, 행위", "Creational, Structural, Behavioral"],
+      explanation: "GoF 디자인 패턴 23개 분류:\n1. 생성(Creational) 5개: Singleton, Factory Method, Abstract Factory, Builder, Prototype\n2. 구조(Structural) 7개: Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy\n3. 행위(Behavioral) 11개: Observer, Strategy, Template Method, Iterator, Command 등"
+    },
+    {
+      subject: "예상_이론",
+      question: "RESTful API의 주요 특징 3가지를 쓰시오.",
+      answer: ["자원(URI)/HTTP 메서드/무상태(stateless)", "URI로 자원 식별, HTTP 메서드로 행위 표현, 무상태성"],
+      explanation: "RESTful API 특징:\n1. 자원(Resource): URI로 자원 식별 (/users/1)\n2. HTTP 메서드: GET(조회), POST(생성), PUT(수정), DELETE(삭제)\n3. Stateless(무상태): 서버는 클라이언트 상태를 저장하지 않음\n4. 표현(Representation): JSON, XML 등으로 자원 표현\n5. Uniform Interface: 일관된 인터페이스"
+    },
+    {
+      subject: "예상_이론",
+      question: "DDoS 공격의 정의와 대응 방법 2가지를 쓰시오.",
+      answer: ["여러 분산된 시스템에서 동시 공격하여 서비스 마비, 방화벽/IPS, 트래픽 필터링", "분산 서비스 거부 공격, WAF/CDN/Rate Limiting"],
+      explanation: "DDoS(Distributed Denial of Service):\n- 정의: 여러 분산된 시스템에서 동시에 트래픽을 보내 대상 서비스를 마비시키는 공격\n- 대응:\n  1. 방화벽/IPS로 비정상 패킷 차단\n  2. CDN, 로드밸런서로 트래픽 분산\n  3. Rate Limiting (요청 빈도 제한)\n  4. Anti-DDoS 솔루션 사용"
     }
   ]
 };

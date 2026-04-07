@@ -68,12 +68,17 @@
         <div class="mode-card gichu" onclick="startMode('기출문제')">
           <div class="mode-icon">📅</div>
           <div class="mode-title">기출문제</div>
-          <div class="mode-desc">연도별 실제 기출 · 2022~2025</div>
+          <div class="mode-desc">연도별 실제 기출 · 2020~2025</div>
         </div>
         <div class="mode-card yesang" onclick="startMode('예상문제')">
           <div class="mode-icon">🎯</div>
           <div class="mode-title">예상문제</div>
           <div class="mode-desc">기출 변형 예상문제 · 실전 대비</div>
+        </div>
+        <div class="mode-card mock" onclick="startMode('모의고사')">
+          <div class="mode-icon">🏛️</div>
+          <div class="mode-title">모의고사</div>
+          <div class="mode-desc">실전처럼 20문제 · 100분 타이머 · 60점 합격</div>
         </div>
         <div class="mode-card odap" onclick="startMode('오답노트')">
           <div class="mode-icon">📕</div>
@@ -203,6 +208,7 @@
         <span id="quiz-mode-badge" class="badge"></span>
         <span id="quiz-subject-badge" class="badge subject"></span>
       </div>
+      <div id="mock-timer" class="mock-timer" style="display:none">⏱️ 100:00</div>
       <div class="quiz-progress-text"><span id="q-current">1</span> / <span id="q-total">10</span></div>
     </div>
     <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>

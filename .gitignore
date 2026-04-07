@@ -1,0 +1,17 @@
+# PDF 자료 (저작권/사이즈)
+*.pdf
+기출문제_PDF/
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+
+# CSV/엑셀
+*.csv
+*.xlsx
+
+# IDE
+.idea/
+.vscode/

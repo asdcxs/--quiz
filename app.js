@@ -143,6 +143,7 @@ function showScreen(id) {
 }
 
 function goHome() {
+  stopMockTimer();
   showScreen('screen-home');
   loadStats();
   updateWrongBadge();
@@ -162,9 +163,104 @@ function startMode(mode) {
     showScreen('screen-gichu');
   } else if (mode === '예상문제') {
     startQuiz('예상문제', '전체');
+  } else if (mode === '모의고사') {
+    startMockExam();
   } else if (mode === '오답노트') {
     startQuiz('오답노트', '전체');
   }
+}
+
+// ── 모의고사 (실전 시험 시뮬레이션) ──
+//   20문제 / 100분 타이머 / 100점 만점 (5점 × 20) / 60점 합격
+//   출제 비율: 코딩 8 + 이론·단답형 12 (실기·기출·예상에서 추출)
+function startMockExam() {
+  currentMode = '모의고사';
+  currentSubject = '실전';
+
+  const allCoding = (QUESTIONS.코딩 || []).slice();
+  const allSilgi  = (QUESTIONS.실기 || []).concat(QUESTIONS.실기_추가 || []);
+  const allGichu  = (QUESTIONS.기출문제 || []).slice();
+  const allYesang = (QUESTIONS.예상문제 || []).slice();
+
+  // 기출/예상에서 코드 있는 것은 코딩 풀, 없는 것은 이론 풀로 분배
+  const gichuCoding  = allGichu.filter(q => q.code);
+  const gichuTheory  = allGichu.filter(q => !q.code);
+  const yesangCoding = allYesang.filter(q => q.code);
+  const yesangTheory = allYesang.filter(q => !q.code);
+
+  const codingPool = shuffle(allCoding.concat(gichuCoding, yesangCoding));
+  const theoryPool = shuffle(allSilgi.concat(gichuTheory, yesangTheory));
+
+  // 코딩 8문제 + 이론 12문제 (부족하면 가능한 만큼)
+  const codingPick = codingPool.slice(0, 8);
+  const theoryPick = theoryPool.slice(0, 12);
+  questions = shuffle(codingPick.concat(theoryPick));
+
+  if (questions.length === 0) {
+    alert('출제할 문제가 부족합니다.');
+    goHome();
+    return;
+  }
+
+  currentIndex = 0;
+  score = 0;
+  wrongList = [];
+
+  document.getElementById('quiz-mode-badge').textContent = '모의고사';
+  document.getElementById('quiz-subject-badge').textContent = `20문제 · 100분`;
+  document.getElementById('q-total').textContent = questions.length;
+
+  startMockTimer();
+  showScreen('screen-quiz');
+  showQuestion(0);
+}
+
+// ── 모의고사 타이머 (100분 카운트다운) ──
+let mockTimerInterval = null;
+let mockEndTime = 0;
+const MOCK_DURATION_MS = 100 * 60 * 1000; // 100분
+
+function startMockTimer() {
+  stopMockTimer();
+  mockEndTime = Date.now() + MOCK_DURATION_MS;
+  const timer = document.getElementById('mock-timer');
+  if (timer) {
+    timer.style.display = 'inline-block';
+    timer.classList.remove('warning', 'danger');
+  }
+  updateMockTimer();
+  mockTimerInterval = setInterval(updateMockTimer, 1000);
+}
+
+function updateMockTimer() {
+  const remain = mockEndTime - Date.now();
+  const timer = document.getElementById('mock-timer');
+  if (!timer) return;
+  if (remain <= 0) {
+    timer.textContent = '⏱️ 0:00';
+    stopMockTimer();
+    alert('⏰ 시험 시간이 종료되었습니다. 답안을 제출합니다.');
+    showFinalResult();
+    return;
+  }
+  const totalSec = Math.floor(remain / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  timer.textContent = `⏱️ ${m}:${s.toString().padStart(2, '0')}`;
+  if (m < 5) {
+    timer.classList.add('danger');
+  } else if (m < 15) {
+    timer.classList.add('warning');
+  }
+}
+
+function stopMockTimer() {
+  if (mockTimerInterval) {
+    clearInterval(mockTimerInterval);
+    mockTimerInterval = null;
+  }
+  const timer = document.getElementById('mock-timer');
+  if (timer) timer.style.display = 'none';
 }
 
 // ── 코딩 언어 선택 ──
@@ -413,16 +509,33 @@ function nextQuestion() {
 
 // ── 최종 결과 ──
 function showFinalResult() {
+  stopMockTimer();
   const rate = Math.round(score / questions.length * 100);
-  document.getElementById('final-score').textContent = score;
-  document.getElementById('final-total').textContent = questions.length;
-  document.getElementById('final-rate').textContent = rate + '%';
 
   let emoji, msg;
-  if (rate >= 90) { emoji = '🏆'; msg = '완벽해요! 합격 확실!'; }
-  else if (rate >= 70) { emoji = '🎯'; msg = '좋아요! 조금만 더!'; }
-  else if (rate >= 50) { emoji = '📚'; msg = '절반 넘겼어요. 복습이 필요해요!'; }
-  else { emoji = '💪'; msg = '틀린 문제를 집중 복습하세요!'; }
+  if (currentMode === '모의고사') {
+    // 100점 만점 (5점 × 20문제), 60점 합격
+    const points = score * 5;
+    const total100 = questions.length * 5;
+    document.getElementById('final-score').textContent = points;
+    document.getElementById('final-total').textContent = total100;
+    if (points >= 60) {
+      emoji = '🏆';
+      msg = `합격! (${points}점 / ${total100}점)`;
+    } else {
+      emoji = '😢';
+      msg = `불합격 (${points}점 / ${total100}점) — 60점 이상 필요`;
+    }
+    document.getElementById('final-rate').textContent = msg;
+  } else {
+    document.getElementById('final-score').textContent = score;
+    document.getElementById('final-total').textContent = questions.length;
+    document.getElementById('final-rate').textContent = rate + '%';
+    if (rate >= 90) { emoji = '🏆'; msg = '완벽해요! 합격 확실!'; }
+    else if (rate >= 70) { emoji = '🎯'; msg = '좋아요! 조금만 더!'; }
+    else if (rate >= 50) { emoji = '📚'; msg = '절반 넘겼어요. 복습이 필요해요!'; }
+    else { emoji = '💪'; msg = '틀린 문제를 집중 복습하세요!'; }
+  }
 
   document.getElementById('result-emoji').textContent = emoji;
   document.getElementById('final-message').textContent = msg;
